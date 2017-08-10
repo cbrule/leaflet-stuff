@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+     <link rel="stylesheet" href="style.css"/>
+     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+     <script src="https://unpkg.com/esri-leaflet@2.0.4/dist/esri-leaflet.js"></script>
+     <script src="https://unpkg.com/esri-leaflet-renderers@2.0.2/dist/esri-leaflet-renderers.js"></script>
+
+  </head>
+  <body>
+  	<div id="mapid"></div>
+  	<script> 
+  	var map = L.map('mapid').setView([32.93, -97.22], 17);
+  	var clicked = [];
+
+  	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    	maxZoom: 18,
+    	id: 'mapbox.streets',
+    	accessToken: 'pk.eyJ1IjoiYnJ1bGVjIiwiYSI6IlpEOGRJVkUifQ.SDYry6LIIHfMMpajIkFCAg'
+	}).addTo(map);
+
+	function style(feature) {
+		return {
+			weight: 2,
+			opacity: 1,
+			color: 'white',
+			dashArray: '3',
+			fillOpacity: 0.1,
+			fillColor: 'white'
+		};
+	}
+
+	function highlightFeature(e) {
+    	var layer = e.target;
+    	if (clicked.indexOf(e.target.feature.id) < 0 ) {
+		    layer.setStyle({
+		        weight: 5,
+		        color: '#1AD4D7',
+		        dashArray: '',
+		        fillOpacity: 0.7,
+		        fillColor: '#A7ECED'
+		    });
+		}
+
+	    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+	        layer.bringToFront();
+	    }
+	}
+
+	function resetHighlight(e) {
+		var layer = e.target;
+		if (clicked.indexOf(e.target.feature.id) < 0 ) {
+			layer.setStyle({
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.1,
+				fillColor: 'white'
+			});
+
+	    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+	        layer.bringToFront();
+	    	}
+		}
+	}
+
+	function onEachFeature(feature, layer) {
+		layer.on({
+			mouseover: highlightFeature,
+			mouseout: resetHighlight,
+			click: clickedFeature
+		});
+	}
+
+  	function clickedFeature(e) {
+    	var layer = e.target;
+
+	    layer.setStyle({
+	        weight: 5,
+	        color: '#666',
+	        dashArray: '',
+	        fillOpacity: 0.7,
+	        fillColor: 'red'
+	    });
+
+	    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+	        layer.bringToFront();
+	    }
+	    clicked.push(e.target.feature.id);
+  }
+
+	var kelParcels = L.esri.featureLayer({url: 'https://gis.cityofkeller.com/arcgis/rest/services/CRW_Parcels/MapServer/0', style: style, onEachFeature: onEachFeature}).addTo(map);
+
+    kelParcels.bindPopup(function(evt) {
+    	return L.Util.template('<h3>{GIS_LINK}</h3><hr /><p>{STREETNUMBER} {STREETNAME} {STREETTYPE}', evt.feature.properties);
+	}); 
+  	</script>
+  </body>
+</html>
