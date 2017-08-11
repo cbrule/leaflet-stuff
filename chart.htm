@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+     <link rel="stylesheet" href="style.css"/>
+     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+     <script src="https://unpkg.com/esri-leaflet@2.0.4/dist/esri-leaflet.js"></script>
+     <script src="https://unpkg.com/esri-leaflet-renderers@2.0.2/dist/esri-leaflet-renderers.js"></script>
+     <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js" /></script>
+  </head>
+  <body>
+  	<div id="mapid"></div>
+  	<div id="chartid">
+  		<ul class="segmented-control">
+	        <li class="segmented-control__item">
+	            <input class="segmented-control__input" type="radio" value="red" name="layerControl" id="red" checked="checked">
+	            <label class="segmented-control__label" for="red" style="cursor: pointer;">Red Team</label>
+	        </li>
+	        <li class="segmented-control__item">
+	            <input class="segmented-control__input" type="radio" value="green" name="layerControl" id="green">
+	            <label class="segmented-control__label" for="green" style="cursor: pointer;">Green Team</label>
+	        </li>
+        </ul>
+        <canvas id="myChart" width="400" height="400"></canvas>
+  	</div>
+  	<script src='main.js'></script>
+  </body>
+</html>
